@@ -1,0 +1,62 @@
+---
+layout: page
+refactor: true
+---
+
+{% include lang.html %} {% assign posts = '' | split: '' %} {% assign
+filtered_posts = site.posts | where: 'categories', 'Article' %} {% for post in
+filtered_posts %} {% assign posts = posts | push: post %} {% endfor %}
+
+<div id="post-list">
+  {% for post in posts %}
+  <a href="{{ post.url | relative_url }}" class="card-wrapper">
+    <div class="card post-preview flex-md-row-reverse">
+      {% assign thumbnail = post.image.path | default: post.image %} {% if
+      post.content contains '![image]' or post.content contains '![Zero2]' %} {%
+      assign thumbnail = post.content | regex_find: '!\[.*?\]\((.*?)\)' | first
+      %} {% endif %} {% if thumbnail %} {% unless thumbnail contains '//' %} {%
+      assign thumbnail = post.img_path | append: '/' | append: thumbnail |
+      replace: '//', '/' %} {% endunless %}
+      <img src="{{ thumbnail }}" w="15" h="8" alt="Thumbnail" />
+      {% endif %}
+
+      <div class="card-body d-flex flex-column">
+        <h1 class="card-title my-2 mt-md-0">{{ post.title }}</h1>
+
+        <div class="card-text post-content mt-0 mb-2">
+          <p style="color: #888888">
+            {% include no-linenos.html content=post.content %} {{ post.content |
+            markdownify | strip_html | truncate: 200 | escape }}
+          </p>
+        </div>
+
+        <div class="post-meta flex-grow-1 d-flex align-items-end">
+          <div class="me-auto">
+            <!-- posted date -->
+            <i class="far fa-calendar fa-fw me-1"></i>
+            {% include datetime.html date=post.date lang=lang %}
+
+            <!-- categories -->
+            {% if post.categories.size > 0 %}
+            <i class="far fa-folder-open fa-fw me-1"></i>
+            <span class="categories">
+              {% for category in post.categories %} {{ category }}{%- unless
+              forloop.last -%},{%- endunless -%} {% endfor %}
+            </span>
+            {% endif %}
+          </div>
+
+          {% if post.pin %}
+          <div class="pin ms-1">
+            <i class="fas fa-thumbtack fa-fw"></i>
+            <span>{{ site.data.locales[lang].post.pin_prompt }}</span>
+          </div>
+          {% endif %}
+        </div>
+        <!-- .post-meta -->
+      </div>
+      <!-- .card-body -->
+    </div>
+  </a>
+  {% endfor %}
+</div>

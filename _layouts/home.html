@@ -3,120 +3,297 @@ layout: default
 refactor: true
 ---
 
-{% include lang.html %}
-
-{% assign all_pinned = site.posts | where: 'pin', 'true' %}
-{% assign all_normal = site.posts | where_exp: 'item', 'item.pin != true and item.hidden != true' %}
-
-{% assign posts = '' | split: '' %}
-
-<!-- Get pinned posts on current page -->
-
-{% assign visible_start = paginator.page | minus: 1 | times: paginator.per_page %}
-{% assign visible_end = visible_start | plus: paginator.per_page %}
-
-{% if all_pinned.size > visible_start %}
-  {% if all_pinned.size > visible_end %}
-    {% assign pinned_size = paginator.per_page %}
-  {% else %}
-    {% assign pinned_size = all_pinned.size | minus: visible_start %}
-  {% endif %}
-
-  {% for i in (visible_start..all_pinned.size) limit: pinned_size %}
-    {% assign posts = posts | push: all_pinned[i] %}
-  {% endfor %}
-{% else %}
-  {% assign pinned_size = 0 %}
-{% endif %}
-
-<!-- Get normal posts on current page -->
-
-{% assign normal_size = paginator.posts | size | minus: pinned_size %}
-
-{% if normal_size > 0 %}
-  {% if pinned_size > 0 %}
-    {% assign normal_start = 0 %}
-  {% else %}
-    {% assign normal_start = visible_start | minus: all_pinned.size %}
-  {% endif %}
-
-  {% assign normal_end = normal_start | plus: normal_size | minus: 1 %}
-
-  {% for i in (normal_start..normal_end) %}
-    {% assign posts = posts | push: all_normal[i] %}
-  {% endfor %}
-{% endif %}
-
-<div id="post-list" class="flex-grow-1 px-xl-1">
-  {% for post in posts %}
-    <article class="card-wrapper card">
-      <a href="{{ post.url | relative_url }}" class="post-preview row g-0 flex-md-row-reverse">
-        {% assign card_body_col = '12' %}
-
-        {% if post.image %}
-          {% assign src = post.image.path | default: post.image %}
-          {% unless src contains '//' %}
-            {% assign src = post.media_subpath | append: '/' | append: src | replace: '//', '/' %}
-          {% endunless %}
-
-          {% assign alt = post.image.alt | xml_escape | default: 'Preview Image' %}
-
-          {% assign lqip = null %}
-
-          {% if post.image.lqip %}
-            {% capture lqip %}lqip="{{ post.image.lqip }}"{% endcapture %}
-          {% endif %}
-
-          <div class="col-md-5">
-            <img src="{{ src }}" alt="{{ alt }}" {{ lqip }}>
-          </div>
-
-          {% assign card_body_col = '7' %}
-        {% endif %}
-
-        <div class="col-md-{{ card_body_col }}">
-          <div class="card-body d-flex flex-column">
-            <h1 class="card-title my-2 mt-md-0">{{ post.title }}</h1>
-
-            <div class="card-text content mt-0 mb-3">
-              <p>{% include post-description.html %}</p>
-            </div>
-
-            <div class="post-meta flex-grow-1 d-flex align-items-end">
-              <div class="me-auto">
-                <!-- posted date -->
-                <i class="far fa-calendar fa-fw me-1"></i>
-                {% include datetime.html date=post.date lang=lang %}
-
-                <!-- categories -->
-                {% if post.categories.size > 0 %}
-                  <i class="far fa-folder-open fa-fw me-1"></i>
-                  <span class="categories">
-                    {% for category in post.categories %}
-                      {{ category }}
-                      {%- unless forloop.last -%},{%- endunless -%}
-                    {% endfor %}
-                  </span>
-                {% endif %}
-              </div>
-
-              {% if post.pin %}
-                <div class="pin ms-1">
-                  <i class="fas fa-thumbtack fa-fw"></i>
-                  <span>{{ site.data.locales[lang].post.pin_prompt }}</span>
-                </div>
-              {% endif %}
-            </div>
-            <!-- .post-meta -->
-          </div>
-          <!-- .card-body -->
-        </div>
-      </a>
-    </article>
-  {% endfor %}
+<div style="text-align: center; margin: 0; padding: 0">
+  <h1 style="text-align: center; margin: 0; padding: 0">
+    Welcome to
+    <span style="color: rgb(14, 248, 49); font-weight: bold"
+      >1000 Days Indie</span
+    >
+    🚀
+  </h1>
+  <h4 style="color: rgba(126, 197, 255, 0.723); margin-top: 0; padding: 0">
+    FROM DAILY PROGRESS TO BIG WINS
+  </h4>
 </div>
-<!-- #post-list -->
+<p>
+  This site tracks my indie developer journey, aiming to build steady income
+  streams and achieve personal and professional growth. 🌱
+</p>
 
-{% if paginator.total_pages > 1 %}
-  {% include post-paginator.html %}
-{% endif %}
+<hr />
+
+<h2 id="about-me-">About Me 🌍</h2>
+<p>A bit about my journey so far:</p>
+<ul>
+  <li>
+    <strong>Education:</strong> Graduated from college in Computer Science
+    (earlier by 1 year)
+  </li>
+  <li>
+    <strong>Freelancing:</strong> Over a year working freelancing for 2 UK
+    clients
+  </li>
+  <li>
+    <strong>Professional Experience:</strong> Over a year as Junior Android dev
+    for an English learning app (Japanese outsource company)
+  </li>
+</ul>
+➡️ Now aiming for a full-time indie developer career.
+<hr />
+<h3 id="inital-skill">Initial skills 🔥</h3>
+<button
+  onclick="toggleVisibility('initial-skills-container')"
+  style="
+    background-color: #0d47a1;
+    color: white;
+    border: none;
+    padding: 4px 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+  "
+  onmouseover="this.style.backgroundColor='#1565C0'"
+  onmouseout="this.style.backgroundColor='#0D47A1'"
+>
+  Show Details ⬇️
+</button>
+<div id="initial-skills-container" style="display: none">
+  <h3 id="tech-skills-">Tech Skills 💻</h3>
+  <div id="tech-skills-details">
+    <ul>
+      <li>
+        <strong>Android Development:</strong> (Java, Kotlin) for over a year
+      </li>
+      <li>
+        <strong>Security:</strong> Over 3 months on reverse engineering and
+        security stuff (mitm, reverse android, automation)
+      </li>
+      <li>
+        <strong>Chrome extension:</strong> familiar with this tech stack as
+        having a project on it
+      </li>
+      <li>
+        <strong>Automation tools:</strong> Selenium + Python (about a year of
+        experience)
+      </li>
+      <li>
+        <strong>Backend:</strong> Spring Boot + MySQL have a simple CRUD project
+        on it
+      </li>
+      <li>
+        <strong>DevOps:</strong> Docker, Cloudflare, and Nginx for self-hosting
+      </li>
+    </ul>
+    <p>Some other hobbies:</p>
+    <ul>
+      <li><strong>Arduino:</strong> working on a personal Pomodoro project</li>
+      <li><strong>3D Printing:</strong> learning to use with Shapr3D</li>
+    </ul>
+    <h3 id="other-skills-">Other Skills 📈</h3>
+    <ul>
+      <li>
+        <strong>Design:</strong> knowing the basics of design, using Figma
+      </li>
+      <li>
+        <strong>Project Management:</strong> Jira and Clickup in the past and
+        Notion for now (solo)
+      </li>
+      <li>
+        <strong>Content Creation:</strong> Writing blog posts and creating some
+        short videos for my own product.
+      </li>
+      <li>
+        <strong>AI prompting:</strong> familiar with some templates and prompts
+      </li>
+      <li>
+        <strong>English:</strong> IELTS 6.5 ==> which I'm focusing on improving
+        at the moment
+      </li>
+    </ul>
+    <p>Some critical skills that I'm focusing on improving:</p>
+    <ul>
+      <li>
+        <strong>Explanation:</strong> English is a must-have skill for me to
+        communicate with clients and users.
+      </li>
+      <li>
+        <strong>Communication:</strong> I'm working on improving my
+        communication skills to better understand the user's needs and provide
+        better solutions.
+      </li>
+      <li>
+        <strong>Estimation:</strong> I'm learning to estimate the time and
+        effort required for each project to deliver on time.
+      </li>
+    </ul>
+  </div>
+</div>
+<hr />
+
+<h2 id="goals-">Goals 🎯</h2>
+<p>
+  Aiming to achieve a balanced life and successful career as an indie developer,
+  I’m setting specific goals in three key areas:
+</p>
+<h3 id="financial-goals-">Financial Goals 💰</h3>
+<ul>
+  <li>Establish multiple revenue streams (aiming for 4+).</li>
+  <li>
+    Reach a passive income of $1K/month and an active income of $3K/month
+    (minimum).
+  </li>
+</ul>
+<h3 id="professional-growth-">Professional Growth 🚀</h3>
+<ul>
+  <li>Build a reputation as a reliable indie developer.</li>
+</ul>
+<h3 id="personal-development-">Personal Development 🌱</h3>
+<ul>
+  <li>Improve my English communication skills to a professional level.</li>
+  <li>
+    Enhance my project management skills to deliver on time and within budget.
+  </li>
+  <li>Health and lowback issue</li>
+</ul>
+<hr />
+
+<h2 id="projects-">Projects 🛠️</h2>
+<p>
+  Here’s a table view of all my projects, tracking each app and website with
+  details like revenue, tech stack, and user base. This helps to keep a
+  bird’s-eye view of everything in progress and where each project stands.
+</p>
+<table class="table" style="background-color: #333; color: #aaa">
+  <thead>
+    <tr style="background-color: #444; color: #aaa">
+      <th>Project Name</th>
+      <th>Homepage</th>
+      <th>Revenue</th>
+      <th>Tech Stack</th>
+      <th>Users</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr style="background-color: #444; color: #aaa">
+      <td>Check Pronunciation Extension</td>
+      <td>
+        <a
+          href="https://checkpronunciation0x.wordpress.com/"
+          style="color: #aaa"
+          >Homepage</a
+        >
+      </td>
+      <td>$0/month</td>
+      <td>
+        <img
+          src="https://www.vectorlogo.zone/logos/w3_html5/w3_html5-icon.svg"
+          alt="HTML5"
+          style="width: 20px; height: 20px"
+        />
+        <img
+          src="https://www.vectorlogo.zone/logos/netlifyapp_watercss/netlifyapp_watercss-icon.svg"
+          alt="CSS"
+          style="width: 20px; height: 20px"
+        />
+        <img
+          src="https://www.vectorlogo.zone/logos/javascript/javascript-icon.svg"
+          alt="JavaScript"
+          style="width: 20px; height: 20px"
+        />
+      </td>
+      <td>0 users</td>
+    </tr>
+    <tr style="background-color: #444; color: #aaa">
+      <td>Udemy Coupons Web</td>
+      <td><a href="#" style="color: #aaa">Website</a></td>
+      <td>$0/month</td>
+      <td>
+        <img
+          src="https://www.vectorlogo.zone/logos/springio/springio-icon.svg"
+          alt="Spring Boot"
+          style="width: 20px; height: 20px"
+        />
+        <img
+          src="https://www.vectorlogo.zone/logos/java/java-icon.svg"
+          alt="Java"
+          style="width: 20px; height: 20px"
+        />
+        <img
+          src="https://www.vectorlogo.zone/logos/mysql/mysql-icon.svg"
+          alt="MySQL"
+          style="width: 20px; height: 20px"
+        />
+      </td>
+      <td>0 users</td>
+    </tr>
+  </tbody>
+</table>
+<button
+  onclick="toggleVisibility('project-details-container')"
+  style="
+    background-color: #0d47a1;
+    color: white;
+    border: none;
+    padding: 4px 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+  "
+  onmouseover="this.style.backgroundColor='#1565C0'"
+  onmouseout="this.style.backgroundColor='#0D47A1'"
+>
+  Show Project Details ⬇️
+</button>
+<div id="project-details-container" style="display: none">
+  <h3 id="check-pronunciation-extension-">Check Pronunciation Extension</h3>
+  <p>
+    <strong>Description:</strong> The first version is for testing account
+    purposes and only supports a single word check. If the extension goes well,
+    I will embed an SDK (Chivox, Elsa) to support full sentence checks, which
+    will then require the user to subscribe.
+  </p>
+  <p>
+    <strong>Business Model:</strong> Freemium. Free users can check
+    pronunciation on the Elsa web. Premium users can check pronunciation using
+    the AI SDK with personalized feedback, and access advanced features such as
+    communication and pronunciation feedback.
+  </p>
+
+  <h3 id="udemy-coupon-website-">Udemy Coupons Website</h3>
+  <p>
+    <strong>Description:</strong> Gather all Udemy coupons (100% off) and
+    display them on the website. With some basic features: search, sort, and
+    filter. Advanced features: push notifications, send emails, auto-suggest
+    based on user data.
+  </p>
+  <p>
+    <strong>Business Model:</strong> Freemium. The basic features are free. But
+    push notification and email sending are premium features.
+  </p>
+</div>
+
+<script>
+  function toggleVisibility(id) {
+    var element = document.getElementById(id);
+    var button = document.querySelector(
+      `button[onclick="toggleVisibility('${id}')"]`
+    );
+    if (element.style.display === "none") {
+      element.style.display = "block";
+      button.innerHTML = "Hide Details ⬆️";
+    } else {
+      element.style.display = "none";
+      button.innerHTML = "Show Details ⬇️";
+    }
+  }
+</script>
